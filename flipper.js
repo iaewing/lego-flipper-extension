@@ -1,8 +1,8 @@
 /**
  * contentScript.js
  * Finds strings matching "M" followed by five numeric digits (MXXXXX),
- * reverses the digits, and converts the text node into a clickable link
- * that searches for the reversed number.
+ * reverses the digits, and converts the text node into a highly visible,
+ * clickable link that searches for the reversed number on LEGO.com.
  */
 
 (function() {
@@ -18,19 +18,19 @@
     }
 
     /**
-     * Creates a Google search URL for a given query.
-     * @param {string} query The search term.
-     * @returns {string} The complete search URL.
+     * Creates a LEGO product search URL for a given set number.
+     * @param {string} query The reversed 5-digit set number.
+     * @returns {string} The complete LEGO product URL.
      */
     function createSearchUrl(query) {
-        // Using Google as the default search engine
+        // Directing the link to the official LEGO product page using the reversed number
         return `https://www.lego.com/en-ca/product/${encodeURIComponent(query)}`;
     }
 
     /**
      * Processes a text node, looking for the MXXXXX pattern.
      * If found, it replaces the text node with a fragment containing
-     * the original text and the new search link.
+     * the original text and the new, explicit search link.
      * @param {Text} node The text node to process.
      */
     function processTextNode(node) {
@@ -62,9 +62,23 @@
             // 3. Create the anchor tag for the search link
             const link = document.createElement('a');
             link.href = createSearchUrl(reversed);
-            link.textContent = fullMatch;
             link.target = '_blank'; // Open in a new tab
-            link.style.cssText = 'color: #1a0dab; text-decoration: underline; cursor: pointer;'; // Basic link styling
+
+            // --- UX and Compliance Enhancements ---
+
+            // A. Tooltip for hover clarity (Explaining the external destination)
+            link.title = `Click to search for LEGO® set ${reversed} on the official LEGO.com website.`;
+
+            // B. Visual Styling (Use a distinct color/bolding to signal importance)
+            link.style.cssText = 'color: #0066c0; text-decoration: underline; cursor: pointer; font-weight: 600;';
+
+            // C. Link Content: Original text plus an external link indicator
+            link.appendChild(document.createTextNode(fullMatch));
+
+            const icon = document.createElement('span');
+            icon.textContent = ' ↗'; // Unicode external link arrow
+            icon.style.cssText = 'font-size: 0.7em; vertical-align: top; margin-left: 2px;';
+            link.appendChild(icon);
 
             // 4. Append the link to the fragment
             fragment.appendChild(link);
