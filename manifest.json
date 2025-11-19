@@ -9,6 +9,7 @@
       "id": "lego-flipper-extension@example.com",
       "data_collection_permissions": {
         "description": "This extension does not collect any personal data.",
+        "required": ["none"],
         "policies": []
       }
     }
