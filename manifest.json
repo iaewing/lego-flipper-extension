@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "MXXXXX Search Reverser",
+  "version": "1.0",
+  "description": "Reverses MXXXXX strings and converts them into search links.",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["flipper.js"]
+    }
+  ]
+}
